@@ -34,12 +34,24 @@ export const CreateVendor = async(req:Request,res:Response,next:NextFunction)=>{
 }
 
 
-
+//all vendors display
 export const GetVendors = async(req:Request,res:Response,next:NextFunction)=>{
-    res.status(200).json("Get All Vendors List here...");
+    const vendors = await Vendor.find()
+    if(vendors !== null)
+    {
+        return res.status(200).json(vendors)
+    }
+    return res.status(400).json({"message":"No Vendors Found!"});
 }
 
-
+//find vendor by id
 export const GetVendorByID = async(req:Request,res:Response,next:NextFunction)=>{
+    const vendorId = req.params.id;
+    const vendor = await Vendor.findById(vendorId)
 
+    if(vendor!==null)
+    {
+        return res.status(200).json(vendor);
+    }
+    return res.status(400).json({"message":"No Vendor Found!"});
 }
