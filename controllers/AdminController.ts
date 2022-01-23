@@ -6,12 +6,11 @@ import { GeneratePassword, GenerateSalt } from '../utility';
 export const CreateVendor = async(req:Request,res:Response,next:NextFunction)=>{
     const {name,address,pincode,foodType,email,password,ownerName,phone} = <CreateVendorInput>req.body;
     const alreadyVendor = await Vendor.find({email:email});
-    // if(alreadyVendor != null)
-    // {
-    //     console.log(alreadyVendor[0].email)
-    //     res.status(400).json("Error! A Vendor with this email already exist")
-    // }
-   
+    if(alreadyVendor[0] != null)
+    {
+        res.status(400).json("Error! A Vendor with this email already exist")
+    }
+   else{
 
     
         //generate a salt
@@ -30,7 +29,8 @@ export const CreateVendor = async(req:Request,res:Response,next:NextFunction)=>{
         phone:phone,
         salt:salt
     });
-    return res.status(200).json(createVendor);
+     res.status(200).json(createVendor);
+}
 }
 
 
