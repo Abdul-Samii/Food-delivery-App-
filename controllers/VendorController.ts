@@ -58,6 +58,28 @@ export const UpdateVendorProfile = async(req:Request,res:Response,next:NextFunct
 
 }
 
+//updateVendorCoverImage
+export const UpdateVendorCoverImage = async(req:Request,res:Response,next:NextFunction)=>{
+    const user = req.user;
+    if(user)
+    {
+        const vendor = await Vendor.findById(user._id);
+        if(vendor !== null)
+        {
+            
+            const files = req.files as [Express.Multer.File]
+            const images = files.map((file:Express.Multer.File)=>file.filename);
+
+            vendor.coverImage.push(...images);
+            const result = await vendor.save();
+            return res.status(200).json(result);
+        }
+    }
+    return res.status(400).json({"message":"Something went wrong"});
+}
+
+
+
 //Update Vendor Service
 export const UpdateVendorService = async(req:Request,res:Response,next:NextFunction)=>{
     const user = req.user;
@@ -86,13 +108,15 @@ export const AddFood = async(req:Request,res:Response,next:NextFunction)=>{
         const vendor = await Vendor.findById(user._id)
         if(vendor!==null)
         {
+            const files = req.files as [Express.Multer.File]
+            const images = files.map((file:Express.Multer.File)=>file.filename);            
             const createdFood = await Food.create({
                 vendorId:vendor._id,
                 name:name,
                 description:description,
                 category:category,
                 foodType:foodType,
-                images:['mock.jpg'],
+                images:images,
                 readyTime:readyTime,
                 price:price,
                 rating:0
