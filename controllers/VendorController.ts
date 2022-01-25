@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { VendorLoginInputs } from "../dto";
-import { Vendor } from "../models";
+import { CreateFoodInputs, CreateVendorInput, VendorLoginInputs } from "../dto";
+import { Food, Vendor } from "../models";
 import { GenerateSignature, ValidatePassword } from "../utility";
 
 
@@ -75,4 +75,47 @@ export const UpdateVendorService = async(req:Request,res:Response,next:NextFunct
         return res.status(200).json(existingVendor);
     }
     return res.status(400).json({"message":"Vendor information not found"});
+}
+
+//Add Food
+export const AddFood = async(req:Request,res:Response,next:NextFunction)=>{
+    const user = req.user;
+    if(user)
+    {
+        const {name,description,category,foodType,readyTime,price} = <CreateFoodInputs>req.body;
+        const vendor = await Vendor.findById(user._id)
+        if(vendor!==null)
+        {
+            const createdFood = await Food.create({
+                vendorId:vendor._id,
+                name:name,
+                description:description,
+                category:category,
+                foodType:foodType,
+                images:['mock.jpg'],
+                readyTime:readyTime,
+                price:price,
+                rating:0
+            })
+            vendor.foods.push(createdFood);
+            const result = await vendor.save();
+            return res.status(200).json(result);
+        }
+    }
+    return res.status(400).json({"message":"Vendor information not found"});
+}
+
+//get all Foods
+export const GetFoods = async(req:Request,res:Response,next:NextFunction)=>{
+    const user = req.user;
+    if(user){
+        const foods = await Food.find({vendorId:user._id});
+        if(foods!==null)
+        {
+            return res.status(200).json(foods)
+        }
+        return res.status(400).json({"message":"No Food Availible"});
+
+    }
+    return res.status(400).json({"message":"Foods information not found"});
 }
