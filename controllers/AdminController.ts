@@ -42,7 +42,9 @@ export const GetVendors = async(req:Request,res:Response,next:NextFunction)=>{
     {
         return res.status(200).json(vendors)
     }
-    return res.status(400).json({"message":"No Vendors Found!"});
+    else{
+        return res.status(400).json({"message":"No Vendors Found!"});
+    }
 }
 
 //find vendor by id

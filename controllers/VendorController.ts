@@ -88,7 +88,7 @@ export const UpdateVendorService = async(req:Request,res:Response,next:NextFunct
         const existingVendor = await Vendor.findById(user._id);
         if(existingVendor!==null){
             // console.log(bool);
-            const bool = existingVendor.serviceAvailible;
+            const bool = existingVendor.serviceAvailable;
             await Vendor.findByIdAndUpdate(existingVendor._id,{$set:{
                 serviceAvailible:!bool
             }})
