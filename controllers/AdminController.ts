@@ -27,6 +27,7 @@ export const CreateVendor = async(req:Request,res:Response,next:NextFunction)=>{
         password:hashPassword,
         ownerName:ownerName,
         phone:phone,
+        serviceAvailible:false,
         salt:salt
     });
      res.status(200).json(createVendor);

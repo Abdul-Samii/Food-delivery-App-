@@ -6,11 +6,10 @@ import { ValidateSignature } from "../utility";
 declare global {
     namespace Express {
         interface Request{
-            user?:string
+            user?:AuthPayload
         }
     }
 }
-request.user="sami"
 export const Authenticate = async(req:Request,res:Response,next:NextFunction)=>{
     const validate = await ValidateSignature(req);
     if(validate)

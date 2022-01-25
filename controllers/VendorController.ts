@@ -31,7 +31,7 @@ export const VendorLogin = async (req:Request,res:Response,next:NextFunction)=>{
 
 //get vendor profile
 export const GetVendorProfile = async(req:Request,res:Response,next:NextFunction)=>{
-    const user = req.body;
+    const user = req.user;
     if(user)
     {
         const existingVendor = await Vendor.findById(user._id);
@@ -44,10 +44,35 @@ export const GetVendorProfile = async(req:Request,res:Response,next:NextFunction
 
 //update vendor
 export const UpdateVendorProfile = async(req:Request,res:Response,next:NextFunction)=>{
+    const user = req.user;
+    console.log(user);
+    if(user)
+    {
+        const updatedUser = await Vendor.findByIdAndUpdate(user._id,req.body);
+        return res.status(200).json(updatedUser);
+    }
+    else{
+        return res.status(400).json({"message":"Something went wrong!"});
+    }
+
 
 }
 
 //Update Vendor Service
 export const UpdateVendorService = async(req:Request,res:Response,next:NextFunction)=>{
-
+    const user = req.user;
+    if(user)
+    {
+        const existingVendor = await Vendor.findById(user._id);
+        if(existingVendor!==null){
+            // console.log(bool);
+            const bool = existingVendor.serviceAvailible;
+            await Vendor.findByIdAndUpdate(existingVendor._id,{$set:{
+                serviceAvailible:!bool
+            }})
+            return res.status(200).json("service changed");
+        }
+        return res.status(200).json(existingVendor);
+    }
+    return res.status(400).json({"message":"Vendor information not found"});
 }
