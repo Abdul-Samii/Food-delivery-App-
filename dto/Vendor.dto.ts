@@ -8,6 +8,7 @@ export interface CreateVendorInput{
     email:string;
     password:string;
     serviceAvailible:boolean;
+    rating:number;
 }
 
 export interface VendorLoginInputs{

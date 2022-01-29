@@ -4,7 +4,7 @@ import { Vendor } from '../models';
 import { GeneratePassword, GenerateSalt } from '../utility';
 
 export const CreateVendor = async(req:Request,res:Response,next:NextFunction)=>{
-    const {name,address,pincode,foodType,email,password,ownerName,phone} = <CreateVendorInput>req.body;
+    const {name,address,pincode,foodType,email,password,ownerName,phone,rating} = <CreateVendorInput>req.body;
     const alreadyVendor = await Vendor.find({email:email});
     if(alreadyVendor[0] != null)
     {
@@ -27,6 +27,7 @@ export const CreateVendor = async(req:Request,res:Response,next:NextFunction)=>{
         password:hashPassword,
         ownerName:ownerName,
         phone:phone,
+        rating:rating,
         serviceAvailible:false,
         salt:salt
     });
